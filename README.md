@@ -1,39 +1,31 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Flutter Connectivity Speed
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This repository contains a Flutter project that measures the speed of the device's internet connectivity. It utilizes the `connectivity` package to determine the network status and the `http` package to perform speed tests.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Detects the current network status (connected, disconnected, mobile, Wi-Fi).
+- Measures the download and upload speed of the internet connection.
+- Displays the speed test results in a user-friendly format.
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+1. Clone this repository: `git clone https://github.com/nicolasdemari/flutter_connectivity_speed.git`
+2. Change to the project directory: `cd flutter_connectivity_speed`
+3. Install the dependencies: `flutter pub get`
+4. Run the app: `flutter run`
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+1. Launch the app on your device or emulator.
+2. Wait for the app to detect the network status.
+3. Tap the "Run Speed Test" button to start the speed test.
+4. The app will display the download and upload speed results.
 
-```dart
-const like = 'sample';
-```
+## Contributing
 
-## Additional information
+Contributions are welcome! If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
