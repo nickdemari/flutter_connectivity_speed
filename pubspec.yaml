@@ -1,8 +1,8 @@
 name: flutter_connectivity_speed
 description: A Flutter package to detect low connectivity speeds.
 version: 0.1.0
-homepage: https://github.com/yourusername/flutter_connectivity_speed
-repository: https://github.com/yourusername/flutter_connectivity_speed
+homepage: https://github.com/nickdemari/flutter_connectivity_speed
+repository: https://github.com/nickdemari/flutter_connectivity_speed
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
