@@ -51,7 +51,7 @@ class _ConnectivityScreenState extends State<ConnectivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Connectivity Speed Checker'),
+        title: const Text('Flutter Connectivity Speed'),
       ),
       body: StreamBuilder<NetworkCondition>(
         stream: checker.onNetworkConditionChanged,
