@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  connectivity_plus: ^5.0.2
   http: ^1.2.2
 
 dev_dependencies:

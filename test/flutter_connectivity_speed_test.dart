@@ -12,11 +12,12 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late MockClient mockClient;
-  late ConnectivitySpeedChecker checker;
+  late FlutterConnectivitySpeed checker;
 
   setUp(() {
     mockClient = MockClient();
-    checker = ConnectivitySpeedChecker(client: mockClient);
+    checker = FlutterConnectivitySpeed();
+    checker.client = mockClient; // Inject the mock client
   });
 
   tearDown(() {
@@ -35,68 +36,62 @@ void main() {
       when(mockClient.post(uplinkUrl, body: anyNamed('body')))
           .thenAnswer((_) async => postResponse);
 
-      final stream = checker.onNetworkConditionChanged.take(1);
-      final result = await stream.first;
-
+      final result = await checker.getNetworkCondition();
       expect(result.condition, ConditionType.noInternet);
     });
 
     test('returns Low Bandwidth', () async {
       const downlinkUrl = 'https://www.google.com/images/phd/px.gif';
-      final downlinkResponse = http.Response('data' * 10000, 200,
-          headers: {'content-length': '100000'});
+      final downlinkResponse = http.Response('data' * 1000, 200,
+          headers: {'content-length': '4000'});
       when(mockClient.get(Uri.parse(downlinkUrl))).thenAnswer((_) async {
         await Future.delayed(
-            const Duration(milliseconds: 2000)); // Simulate slow network
+            const Duration(milliseconds: 5000)); // Simulate slow network
         return downlinkResponse;
       });
 
       const uplinkUrl = 'https://httpbin.org/post';
       final uplinkResponse =
-          http.Response('', 200, headers: {'content-length': '100000'});
+          http.Response('', 200, headers: {'content-length': '4000'});
       when(mockClient.post(Uri.parse(uplinkUrl), body: anyNamed('body')))
           .thenAnswer((_) async {
         await Future.delayed(
-            const Duration(milliseconds: 4000)); // Simulate slow network
+            const Duration(milliseconds: 5000)); // Simulate slow network
         return uplinkResponse;
       });
 
-      final stream = checker.onNetworkConditionChanged.take(1);
-      final result = await stream.first;
-
+      final result = await checker.getNetworkCondition();
       expect(result.condition, ConditionType.lowBandwidth);
     });
 
     test('returns High Latency', () async {
       const downlinkUrl = 'https://www.google.com/images/phd/px.gif';
-      final downlinkResponse = http.Response('data' * 10000, 200,
-          headers: {'content-length': '100000'});
+      final downlinkResponse = http.Response('data' * 1000, 200,
+          headers: {'content-length': '4000'});
       when(mockClient.get(Uri.parse(downlinkUrl))).thenAnswer((_) async {
         await Future.delayed(
-            const Duration(milliseconds: 1500)); // Simulate high latency
+            const Duration(milliseconds: 2000)); // Simulate high latency
         return downlinkResponse;
       });
 
       const uplinkUrl = 'https://httpbin.org/post';
       final uplinkResponse =
-          http.Response('', 200, headers: {'content-length': '100000'});
+          http.Response('', 200, headers: {'content-length': '4000'});
       when(mockClient.post(Uri.parse(uplinkUrl), body: anyNamed('body')))
           .thenAnswer((_) async {
         await Future.delayed(
-            const Duration(milliseconds: 1500)); // Simulate high latency
+            const Duration(milliseconds: 2000)); // Simulate high latency
         return uplinkResponse;
       });
 
-      final stream = checker.onNetworkConditionChanged.take(1);
-      final result = await stream.first;
-
+      final result = await checker.getNetworkCondition();
       expect(result.condition, ConditionType.highLatency);
     });
 
     test('returns Good', () async {
       const downlinkUrl = 'https://www.google.com/images/phd/px.gif';
       final downlinkResponse = http.Response('data' * 100000, 200,
-          headers: {'content-length': '1000000'});
+          headers: {'content-length': '400000'});
       when(mockClient.get(Uri.parse(downlinkUrl))).thenAnswer((_) async {
         await Future.delayed(
             const Duration(milliseconds: 500)); // Simulate fast network
@@ -105,7 +100,7 @@ void main() {
 
       const uplinkUrl = 'https://httpbin.org/post';
       final uplinkResponse =
-          http.Response('', 200, headers: {'content-length': '1000000'});
+          http.Response('', 200, headers: {'content-length': '400000'});
       when(mockClient.post(Uri.parse(uplinkUrl), body: anyNamed('body')))
           .thenAnswer((_) async {
         await Future.delayed(
@@ -113,9 +108,7 @@ void main() {
         return uplinkResponse;
       });
 
-      final stream = checker.onNetworkConditionChanged.take(1);
-      final result = await stream.first;
-
+      final result = await checker.getNetworkCondition();
       expect(result.condition, ConditionType.good);
     });
   });

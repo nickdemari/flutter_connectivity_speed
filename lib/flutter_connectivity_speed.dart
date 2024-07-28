@@ -3,24 +3,33 @@ import 'package:flutter_connectivity_speed/entities/condition_type.dart';
 import 'package:flutter_connectivity_speed/entities/network_connection.dart';
 import 'package:http/http.dart' as http;
 
-class ConnectivitySpeedChecker {
-  final http.Client _client;
+class FlutterConnectivitySpeed {
+  static final FlutterConnectivitySpeed _instance =
+      FlutterConnectivitySpeed._internal();
+  late http.Client _client;
   late StreamController<NetworkCondition> _controller;
   Timer? _timer;
 
-  ConnectivitySpeedChecker({
-    required http.Client client,
-  }) : _client = client {
+  factory FlutterConnectivitySpeed() {
+    return _instance;
+  }
+
+  FlutterConnectivitySpeed._internal() {
+    _client = http.Client();
     _controller = StreamController<NetworkCondition>.broadcast(
       onListen: _startMonitoring,
       onCancel: _stopMonitoring,
     );
   }
 
+  set client(http.Client client) {
+    _client = client;
+  }
+
   Stream<NetworkCondition> get onNetworkConditionChanged => _controller.stream;
 
   void _startMonitoring() {
-    _timer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+    _timer = Timer.periodic(const Duration(milliseconds: 1200), (_) async {
       final condition = await getNetworkCondition();
       if (!_controller.isClosed) {
         _controller.add(condition);
@@ -77,11 +86,11 @@ class ConnectivitySpeedChecker {
 
     if (downlinkSpeed == 0 || uplinkSpeed == 0) {
       condition = ConditionType.noInternet;
-    } else if (downlinkSpeed < 10000 || uplinkSpeed < 5000) {
-      // Adjusted thresholds
+    } else if (downlinkSpeed < 1000 || uplinkSpeed < 500) {
+      // Adjusted thresholds for Low Bandwidth
       condition = ConditionType.lowBandwidth;
-    } else if (downlinkSpeed < 30000 || uplinkSpeed < 15000) {
-      // Adjusted thresholds
+    } else if (downlinkSpeed < 3000 || uplinkSpeed < 1500) {
+      // Adjusted thresholds for High Latency
       condition = ConditionType.highLatency;
     } else {
       condition = ConditionType.good;
