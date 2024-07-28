@@ -1,6 +1,6 @@
 # Flutter Connectivity Speed
 
-This repository contains a Flutter project that measures the speed of the device's internet connectivity. It utilizes the `connectivity` package to determine the network status and the `http` package to perform speed tests.
+This repository contains a Flutter project that measures the speed of the device's internet connectivity. It utilizes the `http` package to perform speed tests.
 
 ## Features
 
