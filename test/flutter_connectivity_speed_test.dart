@@ -112,4 +112,31 @@ void main() {
       expect(result.condition, ConditionType.good);
     });
   });
+
+  group('onNetworkConditionChanged', () {
+    test('emits the network condition', () async {
+      const downlinkUrl = 'https://www.google.com/images/phd/px.gif';
+      final downlinkResponse = http.Response('data' * 100000, 200,
+          headers: {'content-length': '400000'});
+      when(mockClient.get(Uri.parse(downlinkUrl))).thenAnswer((_) async {
+        await Future.delayed(
+            const Duration(milliseconds: 500)); // Simulate fast network
+        return downlinkResponse;
+      });
+
+      const uplinkUrl = 'https://httpbin.org/post';
+      final uplinkResponse =
+          http.Response('', 200, headers: {'content-length': '400000'});
+      when(mockClient.post(Uri.parse(uplinkUrl), body: anyNamed('body')))
+          .thenAnswer((_) async {
+        await Future.delayed(
+            const Duration(milliseconds: 500)); // Simulate fast network
+        return uplinkResponse;
+      });
+
+      final condition = await checker.onNetworkConditionChanged.first;
+
+      expect(condition.condition, ConditionType.good);
+    });
+  });
 }
